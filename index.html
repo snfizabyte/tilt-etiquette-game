@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Head Tilt Grammar Game</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    text-align: center;
+    padding: 30px;
+}
+
+.quiz-box {
+    background: white;
+    max-width: 700px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+#question {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 18px;
+    margin: 8px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.continuous { background-color: #3b82f6; color: white; }
+.simple { background-color: #ef4444; color: white; }
+.both { background-color: #8b5cf6; color: white; }
+
+#feedback {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+#scoreBoard {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.head {
+    font-size: 60px;
+    transition: transform 0.4s ease;
+    display: inline-block;
+    margin: 20px;
+}
+
+.tilt-left {
+    transform: rotate(-20deg);
+}
+
+.tilt-right {
+    transform: rotate(20deg);
+}
+
+.tilt-both {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+    100% { transform: rotate(0deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="quiz-box">
+    <h2>🎮 Head Tilt Grammar Game</h2>
+    <div class="head" id="head">🙂</div>
+    <p id="question"></p>
+
+    <button class="continuous" onclick="checkAnswer('Continuous')">Tilt Left (Continuous)</button>
+    <button class="simple" onclick="checkAnswer('Simple')">Tilt Right (Simple)</button>
+    <button class="both" onclick="checkAnswer('Both')">Tilt Both</button>
+
+    <p id="feedback"></p>
+    <div id="scoreBoard"></div>
+</div>
+
+<script>
+
+const questions = [
+    { text: "The chef was cooking dinner.", answer: "Continuous" },
+    { text: "The plates fell on the floor.", answer: "Simple" },
+    { text: "While Aina was taking photos, Ravi called her name.", answer: "Both" },
+    { text: "They were dancing at the festival.", answer: "Continuous" },
+    { text: "The music stopped suddenly.", answer: "Simple" },
+    { text: "While we were walking home, it started to rain.", answer: "Both" },
+    { text: "She was studying for her exam.", answer: "Continuous" },
+    { text: "Her phone rang loudly.", answer: "Simple" },
+    { text: "While the children were playing, their parents watched them.", answer: "Both" },
+    { text: "The lights went out during the performance.", answer: "Simple" }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function loadQuestion() {
+    document.getElementById("question").innerText =
+        questions[currentQuestion].text;
+
+    document.getElementById("feedback").innerText = "";
+    document.getElementById("head").className = "head";
+}
+
+function checkAnswer(choice) {
+
+    let correctAnswer = questions[currentQuestion].answer;
+    let head = document.getElementById("head");
+
+    if (choice === correctAnswer) {
+        score++;
+        document.getElementById("feedback").innerText = "Correct! 🎉";
+        document.getElementById("feedback").style.color = "green";
+    } else {
+        document.getElementById("feedback").innerText =
+            "Wrong! Correct answer: " + correctAnswer;
+        document.getElementById("feedback").style.color = "red";
+    }
+
+    // Head animation
+    if (correctAnswer === "Continuous") {
+        head.classList.add("tilt-left");
+    } 
+    else if (correctAnswer === "Simple") {
+        head.classList.add("tilt-right");
+    } 
+    else {
+        head.classList.add("tilt-both");
+    }
+
+    currentQuestion++;
+
+    setTimeout(() => {
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            endQuiz();
+        }
+    }, 1200);
+}
+
+function endQuiz() {
+    document.querySelector(".quiz-box").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2>" +
+        "<p>Your Score: <strong>" + score + " / " + questions.length + "</strong></p>" +
+        "<p>Great job learning Past Simple & Past Continuous!</p>";
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
